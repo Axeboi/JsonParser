@@ -8,8 +8,25 @@ public class JsonParser {
     public static void main(String[] args)  {
 
 
-        String json = "{\"hello\": \"world\", \"arrayDataObj\": [{\"key\": \"firstValue\"}, {\"key\": \"secondValue\"}], \"nestedDataObj\": {\"newHello\": \"newWorld\"} } ";
-        //String json = "{\"hello\": \"world\", \"nestedDataObj\": {\"newHello\": \"newWorld\"}, \"arrayDataObj\": [{\"key\": \"firstValue\"}, {\"key\": \"secondValue\"}] } ";
+        // String json = "{\"hello\": \"world\", \"arrayDataObj\": [{\"key\": \"firstValue\"}, {\"key\": \"secondValue\"}], \"nestedDataObj\": {\"newHello\": \"newWorld\"} } ";
+        // String json = "{\"hello\": \"world\", \"nestedDataObj\": {\"newHello\": \"newWorld\"}, \"arrayDataObj\": [{\"key\": \"firstValue\"}, {\"key\": \"secondValue\"}] } ";
+
+        String json = """
+        {
+            "hello": "world",
+            "arrayDataObj": [
+                {
+                    "key": "firstValue"
+                },
+                {
+                    "key": "secondValue"
+                }
+            ],
+            "nestedDataObj": {
+                "newHello": "newWorld"
+            }
+        }
+        """;
         System.out.println("Raw Json:\n" + json);
         System.out.println();
         JsonScanner scanner = new JsonScanner(json);

@@ -10,9 +10,7 @@ public class Parser {
     private int current = 0;
     private boolean hasError = false;
 
-    Parser (List<Token> tokens) {
-        this.tokens = tokens;
-    }
+    Parser (List<Token> tokens) { this.tokens = tokens; }
 
     public void parse() {
         astTree = block(new JsonBlock());
@@ -20,65 +18,62 @@ public class Parser {
     }
 
     public Object block(JsonBlock block) {
-        //List<Object> block = new ArrayList<>();
-
-        if (tokens.get(current).type == TokenType.LEFTCURLY) {
+        if (peek().type == TokenType.LEFTCURLY) {
             advance();
-            while (peek(0).type != TokenType.RIGHTCURLY) {
+            while (peek().type != TokenType.RIGHTCURLY) {
                 block.add(data());
                 advance();
             }
-            //ast.add(block);
             return block;
         }
 
+        // Shoud error be set here?
+        hasError = true;
         return null;
     }
 
     public Object data() {
+        // A block has to start with a key and a colon
         if (peek(0).type != TokenType.KEY && peek(1).type != TokenType.COLON) {
             hasError = true;
             return null;
         }
 
-        //if (peek(2).type == TokenType.EOF) return null;
-
+        // Get current token
         Token currentToken = peek(0);
 
-        TokenType type = peek(2).type;
+        // We have already established that there is a key and a colon
+        Token nextToken = advance(2);
 
         Object currentKey = new Object();
-        switch(type) {
+        switch(nextToken.type) {
             case VALUE:
-                currentKey = tokens.get(current + 2).lexeme;
-                advance(2);
-                if (tokens.get(current + 1).type == TokenType.COMMA) advance();
-
+                currentKey = nextToken.lexeme;
                 break;
+
             case LEFTBRACKET:
-                advance(3);
+                nextToken = advance();
                 JsonArray jsonArray = new JsonArray();
-                if (peek(0).type == TokenType.LEFTCURLY) {
-                    while(peek(0).type != TokenType.RIGHTBRACKET) {
+                if (nextToken.type == TokenType.LEFTCURLY) {
+                    while(nextToken.type != TokenType.RIGHTBRACKET) {
                         Object arrData = block(new JsonBlock());
                         jsonArray.add(arrData);
                         if (peek(1).type == TokenType.COMMA) advance();
-                        advance();
+                        nextToken = advance();
                     }
                 }
-
-                if (tokens.get(current + 1).type == TokenType.COMMA) advance();
 
                 currentKey = (Object) jsonArray;
                 break;
             case LEFTCURLY:
-                advance(2);
                 currentKey = (Object) block(new JsonBlock());
 
                 break;
-            case COMMA:
-                advance();
+            default:
+                assert true : "This code should probably not be reached";
         }
+
+        if(peek(1).type == TokenType.COMMA) advance();
 
         return new JsonObject(currentToken.lexeme, (Object) currentKey);
     }
@@ -97,6 +92,10 @@ public class Parser {
         return tokens.get(++current);
     }
 
+    private Token currentToken() {
+        return tokens.get(current);
+    }
+
     private Token advance() {
         if ((current + 1) < tokens.size()) {
             current++;
@@ -108,6 +107,10 @@ public class Parser {
         if ((current + ahead) < tokens.size()) {
             current = current + ahead;
         }
+        return tokens.get(current);
+    }
+
+    private Token peek() {
         return tokens.get(current);
     }
 

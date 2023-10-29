@@ -14,7 +14,7 @@ public class JsonScanner {
     }
 
     public ArrayList<Token> scan() {
-        str = str.replaceAll(" ", "");
+        str = str.replaceAll("[\\n\\r\\s]+", "");
         while(!isAtEnd()) {
             tokens.add(matchNext());
             current++;
