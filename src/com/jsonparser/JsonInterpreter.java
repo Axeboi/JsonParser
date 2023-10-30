@@ -10,7 +10,7 @@ public class JsonInterpreter {
     private List<Object> objects;
     private Object astTree;
 
-    JsonInterpreter(Object astTree) {this.astTree = astTree;}
+    JsonInterpreter(Object astTree) { this.astTree = astTree; }
 
     public Object interpret(String schemaClassName) throws IllegalAccessException, ClassNotFoundException {
         Object dataClass = initInstanceByClassName(schemaClassName);

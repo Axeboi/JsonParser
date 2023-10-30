@@ -1,8 +1,8 @@
 package com.jsonparser;
 
 public class JsonObject {
-    private final String key;
-    private final Object value;
+    private String key;
+    private Object value;
 
     JsonObject(String key, Object value) {
         this.key = key;
@@ -12,6 +12,7 @@ public class JsonObject {
     public String getKey() {
         return key;
     }
+    public void setKey(String key) { this.key = key; }
 
     public Object getValue() {
         return value;
